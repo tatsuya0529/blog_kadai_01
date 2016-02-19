@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/../vendor/autoload.php';
-require __DIR__.'/model/article.php';
+require_once __DIR__.'/model/article.php';
 
 $app = new Silex\Application();
 $loader = new Twig_Loader_String();
