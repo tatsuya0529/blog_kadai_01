@@ -3,7 +3,7 @@
 {% block content %}
 	<h1>ブログ{{name}}</h1>
 	<div>
-		<form method="post" action="/create/complete{% if article.id != '' %}/{{article.id}}{% endif %}">
+		<form method="post" action="/create{% if article.id != '' %}/{{article.id}}{% endif %}">
 			<table>
 				<tr>
 					<th>{{title}}</th>

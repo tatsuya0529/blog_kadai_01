@@ -2,6 +2,9 @@
 
 {% block content %}
 	<h1>タツ坊の部屋</h1>
+{% if message is defined %}
+	<div>{{message}}</div>
+{% endif %}
 	<div>
 		<p>
 			<a href="/create">
@@ -10,6 +13,7 @@
 		</p>
 	</div>
 	<hr>
+{% if articles is defined %}
 {% for article in articles %}
 	<div>
 		<p>
@@ -18,4 +22,5 @@
 	</div>
 	<hr>
 {% endfor %}
+{% endif %}
 {% endblock %}

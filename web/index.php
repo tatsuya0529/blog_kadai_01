@@ -6,6 +6,7 @@ $app = new Silex\Application();
 $loader = new Twig_Loader_String();
 $twig = new Twig_Environment($loader);
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 // デバッグモード有効
 $app['debug'] = true;
@@ -26,7 +27,7 @@ $app['idiorm.config'] = array(
 );
 $app['paris.model.prefix'] = '';
 
-// TOP
+// TOP(ブログ一覧画面)
 $app->get('/', function () use ($app) {
 	$article_model = $app['paris']->getModel('Articles');
 	$articles = $article_model->order_by_desc('id')->find_many();
@@ -39,7 +40,14 @@ $app->get('/', function () use ($app) {
 // 新規投稿画面
 $app->get('/create', function () use ($app) {
 	$article = $app['paris']->getModel('Articles')->create();
-	$article->set($article->_properties);
+	$value = array(
+		'id' => '',
+		'title' => '',
+		'content' => '',
+		'created_at' => '',
+		'updated_at' => '',
+	);
+	$article->set($value);
 
 	return $app['twig']->render('create/index.php', array(
 		'name' => '新規投稿',
@@ -50,15 +58,19 @@ $app->get('/create', function () use ($app) {
 });
 
 // 新規投稿実行
-$app->post('/create/complete', function (Request $request) use ($app) {
+$app->post('/create', function (Request $request) use ($app) {
 	$article = $app['paris']->getModel('Articles')->create();
-	$article->set_properties($request);
-	$article->set($article->_properties);
+	$value = array(
+		'title' => $request->get('title'),
+		'content' => $request->get('content'),
+		'created_at' => date('Y/m/d H:i:s'),
+		'updated_at' => ''
+	);
+
+	$article->set($value);
 	$article->save();
 
-	return $app['twig']->render('create/complete.php', array(
-		'message' => '新規投稿が完了しました！',
-	));
+	return $app->redirect('/');
 });
 
 $app->run();
