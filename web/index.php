@@ -73,4 +73,14 @@ $app->post('/create', function (Request $request) use ($app) {
 	return $app->redirect('/');
 });
 
+// エラーハンドリング
+$app->error(function (\Exception $e, $code) use ($app) {
+	$app['twig']->addGlobal('template', $app['twig']->loadTemplate('template.php'));
+
+	return new Response($app['twig']->render('index.php', array(
+		'message' => $e->getMessage(),
+		'articles' => $app['paris']->getModel('Articles')->order_by_desc('id')->find_many()
+	)), $code);
+});
+
 $app->run();
