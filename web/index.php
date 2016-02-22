@@ -65,12 +65,16 @@ $app->post('/create', function (Request $request) use ($app) {
 });
 
 // エラーハンドリング
-$app->error(function (\Exception $e, $code) use ($app) {
-	$app['twig']->addGlobal('template', $app['twig']->loadTemplate('template.html'));
+$app->error(function (\Exception $e, $code) {
+	switch ($code) {
+		case 404:
+			$message = 'The requested page could not be found.';
+			break;
+		default:
+			$message = 'We are sorry, but something went terribly wrong.';
+	}
 
-	return new Response($app['twig']->render('error.html', array(
-		'message' => $e->getMessage()
-	)), $code);
+	return new Response($message);
 });
 
 $app->run();
