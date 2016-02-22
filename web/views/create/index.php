@@ -14,7 +14,10 @@
 					<td><textarea name="content">{{article.content}}</textarea></td>
 				</tr>
 			</table>
-			<p><input type="submit" value="登録"></p>
+			<p>
+				<a href="/">戻る</a>
+				<input type="submit" value="登録">
+			</p>
 		</form>
 	</div>
 {% endblock %}
