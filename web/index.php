@@ -46,13 +46,11 @@ $app->get('/create', function () use ($app) {
 
 	return $app['twig']->render('create.html', array(
 		'article' => $article,
-		'title' => 'タイトル',
-		'content' => '本文',
 	));
 });
 
 // 新規投稿実行
-$app->post('/save', function (Request $request) use ($app) {
+$app->post('/create', function (Request $request) use ($app) {
 	$article = $app['paris']->getModel('Articles')->create();
 	$value = array(
 		'title' => $request->get('title'),
