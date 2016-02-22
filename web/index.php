@@ -13,7 +13,7 @@ $app['debug'] = true;
 
 // template
 $app->before(function () use ($app) {
-	$app['twig']->addGlobal('template', $app['twig']->loadTemplate('template.php'));
+	$app['twig']->addGlobal('template', $app['twig']->loadTemplate('template.html'));
 });
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
@@ -27,14 +27,9 @@ $app['idiorm.config'] = array(
 );
 $app['paris.model.prefix'] = '';
 
-// TOP(ブログ一覧画面)
+// TOP
 $app->get('/', function () use ($app) {
-	$article_model = $app['paris']->getModel('Articles');
-	$articles = $article_model->order_by_desc('id')->find_many();
-
-	return $app['twig']->render('index.php', array(
-		'articles' => $articles,
-	));
+	return $app['twig']->render('index.html');
 });
 
 // 新規投稿画面
@@ -49,8 +44,7 @@ $app->get('/create', function () use ($app) {
 	);
 	$article->set($value);
 
-	return $app['twig']->render('create/index.php', array(
-		'name' => '新規投稿',
+	return $app['twig']->render('create.html', array(
 		'article' => $article,
 		'title' => 'タイトル',
 		'content' => '本文',
@@ -58,7 +52,7 @@ $app->get('/create', function () use ($app) {
 });
 
 // 新規投稿実行
-$app->post('/create', function (Request $request) use ($app) {
+$app->post('/save', function (Request $request) use ($app) {
 	$article = $app['paris']->getModel('Articles')->create();
 	$value = array(
 		'title' => $request->get('title'),
@@ -66,7 +60,6 @@ $app->post('/create', function (Request $request) use ($app) {
 		'created_at' => date('Y/m/d H:i:s'),
 		'updated_at' => ''
 	);
-
 	$article->set($value);
 	$article->save();
 
@@ -75,11 +68,10 @@ $app->post('/create', function (Request $request) use ($app) {
 
 // エラーハンドリング
 $app->error(function (\Exception $e, $code) use ($app) {
-	$app['twig']->addGlobal('template', $app['twig']->loadTemplate('template.php'));
+	$app['twig']->addGlobal('template', $app['twig']->loadTemplate('template.html'));
 
-	return new Response($app['twig']->render('index.php', array(
-		'message' => $e->getMessage(),
-		'articles' => $app['paris']->getModel('Articles')->order_by_desc('id')->find_many()
+	return new Response($app['twig']->render('error.html', array(
+		'message' => $e->getMessage()
 	)), $code);
 });
 
