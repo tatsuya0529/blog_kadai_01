@@ -42,10 +42,13 @@ $app->get('/detail/{id}', function ($id) use ($app) {
 	$article_model = $app['paris']->getModel('Articles');
 	$article = $article_model->find_one($id);
 
+	if ( ! $article) {
+		return new Response("お探しのページは存在しません。", 404);
+	}
+
 	return $app['twig']->render('detail.html', array(
 		'article' => $article,
 	));
-	return $app['twig']->render('index.html');
  });
 
 // 新規投稿画面
