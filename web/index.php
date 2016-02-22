@@ -27,10 +27,26 @@ $app['idiorm.config'] = array(
 );
 $app['paris.model.prefix'] = '';
 
-// TOP
+// TOP(投稿一覧)画面
 $app->get('/', function () use ($app) {
-	return $app['twig']->render('index.html');
+	$article_model = $app['paris']->getModel('Articles');
+	$articles = $article_model->order_by_desc('id')->find_many();
+
+	return $app['twig']->render('index.html', array(
+		'articles' => $articles,
+	));
 });
+
+// 投稿詳細画面
+$app->get('/detail/{id}', function ($id) use ($app) {
+	$article_model = $app['paris']->getModel('Articles');
+	$article = $article_model->find_one($id);
+
+	return $app['twig']->render('detail.html', array(
+		'article' => $article,
+	));
+	return $app['twig']->render('index.html');
+ });
 
 // 新規投稿画面
 $app->get('/create', function () use ($app) {
