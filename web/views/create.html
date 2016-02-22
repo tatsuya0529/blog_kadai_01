@@ -1,17 +1,17 @@
 {% extends template %}
 
 {% block content %}
-	<h1>ブログ{{name}}</h1>
+	<h2>ブログ新規投稿</h2>
 	<div>
-		<form method="post" action="/create{% if article.id != '' %}/{{article.id}}{% endif %}">
+		<form method="post" action="/save">
 			<table>
 				<tr>
 					<th>{{title}}</th>
-					<td><input type="text" name="title" value="{{article.title}}"></td>
+					<td><input type="text" name="title" value=""></td>
 				</tr>
 				<tr>
 					<th>{{content}}</th>
-					<td><textarea name="content">{{article.content}}</textarea></td>
+					<td><textarea name="content"></textarea></td>
 				</tr>
 			</table>
 			<p>
