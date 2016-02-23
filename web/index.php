@@ -90,6 +90,10 @@ $app->get('/edit/{id}', function ($id) use ($app) {
 	$article_model = $app['paris']->getModel('Articles');
 	$article = $article_model->find_one($id);
 
+	if ( ! $article) {
+		$app->abort(404, "お探しのページは存在しません。");
+	}
+
 	return $app['twig']->render('crad.html', array(
 		'article' => $article,
 		'name' => '編集'
@@ -100,6 +104,11 @@ $app->get('/edit/{id}', function ($id) use ($app) {
 $app->post('/edit/{id}', function (Request $request, $id) use ($app) {
 	$article_model = $app['paris']->getModel('Articles');
 	$article = $article_model->find_one($id);
+
+	if ( ! $article) {
+		$app->abort(404, "お探しのページは存在しません。");
+	}
+
 	$value = array(
 		'id' => $id,
 		'title' => $request->get('title'),
@@ -117,6 +126,10 @@ $app->post('/edit/{id}', function (Request $request, $id) use ($app) {
 $app->get('/delete/{id}', function ($id) use ($app) {
 	$article_model = $app['paris']->getModel('Articles');
 	$article = $article_model->find_one($id);
+
+	if ( ! $article) {
+		$app->abort(404, "お探しのページは存在しません。");
+	}
 
 	$article->delete();
 
