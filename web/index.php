@@ -52,7 +52,7 @@ $app->get('/detail/{id}', function ($id) use ($app) {
  });
 
 // 新規投稿画面
-$app->get('/create', function () use ($app) {
+$app->get('/crad', function () use ($app) {
 	$article = $app['paris']->getModel('Articles')->create();
 	$value = array(
 		'id' => '',
@@ -63,13 +63,23 @@ $app->get('/create', function () use ($app) {
 	);
 	$article->set($value);
 
-	return $app['twig']->render('create.html', array(
+	return $app['twig']->render('crad.html', array(
+		'article' => $article,
+	));
+});
+
+// 編集画面
+$app->get('/crad/{id}', function ($id) use ($app) {
+	$article_model = $app['paris']->getModel('Articles');
+	$article = $article_model->find_one($id);
+
+	return $app['twig']->render('crad.html', array(
 		'article' => $article,
 	));
 });
 
 // 新規投稿実行
-$app->post('/create', function (Request $request) use ($app) {
+$app->post('/crad', function (Request $request) use ($app) {
 	$article = $app['paris']->getModel('Articles')->create();
 	$value = array(
 		'title' => $request->get('title'),
@@ -77,6 +87,24 @@ $app->post('/create', function (Request $request) use ($app) {
 		'created_at' => date('Y/m/d H:i:s'),
 		'updated_at' => ''
 	);
+
+	$article->set($value);
+	$article->save();
+
+	return $app->redirect('/');
+});
+
+// 編集実行
+$app->post('/crad/{id}', function (Request $request, $id) use ($app) {
+	$article_model = $app['paris']->getModel('Articles');
+	$article = $article_model->find_one($id);
+	$value = array(
+		'id' => $id,
+		'title' => $request->get('title'),
+		'content' => $request->get('content'),
+		'updated_at' => date('Y/m/d H:i:s')
+	);
+
 	$article->set($value);
 	$article->save();
 

@@ -3,13 +3,14 @@
 {% block content %}
 	<div>
 		<p>
-			<input type="button" value="新規投稿" onClick="location.href='/create'">
+			<input type="button" value="新規投稿" onClick="location.href='/crad'">
 		</p>
 	</div>
 {% if articles is defined %}
 {% for article in articles %}
 	<div>
 		<p>
+			<input type="button" value="編集" onClick="location.href='/crad/{{article.id}}'">
 			{{article.created_at}} : 「<a href="/detail/{{article.id}}">{{article.title}}</a>」
 		</p>
 	</div>

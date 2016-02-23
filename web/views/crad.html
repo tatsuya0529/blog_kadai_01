@@ -3,15 +3,15 @@
 {% block content %}
 	<h2>ブログ新規投稿</h2>
 	<div>
-		<form method="post" action="/create">
+		<form method="post" action="/crad{% if article.id != '' %}/{{article.id}}{% endif %}">
 			<table>
 				<tr>
 					<th>タイトル</th>
-					<td><input type="text" name="title" value=""></td>
+					<td><input type="text" name="title" value="{{article.title}}"></td>
 				</tr>
 				<tr>
 					<th>本文</th>
-					<td><textarea name="content"></textarea></td>
+					<td><textarea name="content">{{article.content}}</textarea></td>
 				</tr>
 			</table>
 			<p>
