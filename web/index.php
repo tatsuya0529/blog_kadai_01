@@ -63,7 +63,7 @@ $app->get('/create', function () use ($app) {
 	);
 	$article->set($value);
 
-	return $app['twig']->render('crad.html', array(
+	return $app['twig']->render('form.html', array(
 		'article' => $article,
 		'name' => '新規投稿'
 	));
@@ -94,7 +94,7 @@ $app->get('/edit/{id}', function ($id) use ($app) {
 		$app->abort(404, "お探しのページは存在しません。");
 	}
 
-	return $app['twig']->render('crad.html', array(
+	return $app['twig']->render('form.html', array(
 		'article' => $article,
 		'name' => '編集'
 	));
