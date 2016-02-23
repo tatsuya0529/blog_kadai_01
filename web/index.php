@@ -52,7 +52,7 @@ $app->get('/detail/{id}', function ($id) use ($app) {
  });
 
 // 新規投稿画面
-$app->get('/crad', function () use ($app) {
+$app->get('/create', function () use ($app) {
 	$article = $app['paris']->getModel('Articles')->create();
 	$value = array(
 		'id' => '',
@@ -65,21 +65,12 @@ $app->get('/crad', function () use ($app) {
 
 	return $app['twig']->render('crad.html', array(
 		'article' => $article,
-	));
-});
-
-// 編集画面
-$app->get('/crad/{id}', function ($id) use ($app) {
-	$article_model = $app['paris']->getModel('Articles');
-	$article = $article_model->find_one($id);
-
-	return $app['twig']->render('crad.html', array(
-		'article' => $article,
+		'name' => '新規投稿'
 	));
 });
 
 // 新規投稿実行
-$app->post('/crad', function (Request $request) use ($app) {
+$app->post('/create', function (Request $request) use ($app) {
 	$article = $app['paris']->getModel('Articles')->create();
 	$value = array(
 		'title' => $request->get('title'),
@@ -94,8 +85,19 @@ $app->post('/crad', function (Request $request) use ($app) {
 	return $app->redirect('/');
 });
 
+// 編集画面
+$app->get('/edit/{id}', function ($id) use ($app) {
+	$article_model = $app['paris']->getModel('Articles');
+	$article = $article_model->find_one($id);
+
+	return $app['twig']->render('crad.html', array(
+		'article' => $article,
+		'name' => '編集'
+	));
+});
+
 // 編集実行
-$app->post('/crad/{id}', function (Request $request, $id) use ($app) {
+$app->post('/edit/{id}', function (Request $request, $id) use ($app) {
 	$article_model = $app['paris']->getModel('Articles');
 	$article = $article_model->find_one($id);
 	$value = array(
@@ -107,6 +109,16 @@ $app->post('/crad/{id}', function (Request $request, $id) use ($app) {
 
 	$article->set($value);
 	$article->save();
+
+	return $app->redirect('/');
+});
+
+// 削除実行
+$app->get('/delete/{id}', function ($id) use ($app) {
+	$article_model = $app['paris']->getModel('Articles');
+	$article = $article_model->find_one($id);
+
+	$article->delete();
 
 	return $app->redirect('/');
 });
