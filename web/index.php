@@ -43,7 +43,7 @@ $app->get('/detail/{id}', function ($id) use ($app) {
 	$article = $article_model->find_one($id);
 
 	if ( ! $article) {
-		return new Response("お探しのページは存在しません。", 404);
+		$app->abort(404, "お探しのページは存在しません。");
 	}
 
 	return $app['twig']->render('detail.html', array(
