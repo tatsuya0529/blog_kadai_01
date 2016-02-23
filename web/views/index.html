@@ -10,6 +10,8 @@
 {% for article in articles %}
 	<div>
 		<p>
+			<input type="button" value="削除" onClick="location.href='/delete/{{article.id}}'"></input>
+			<input type="button" value="編集" onClick="location.href='/edit/{{article.id}}'">
 			{{article.created_at}} : 「<a href="/detail/{{article.id}}">{{article.title}}</a>」
 		</p>
 	</div>

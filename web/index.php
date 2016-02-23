@@ -63,8 +63,9 @@ $app->get('/create', function () use ($app) {
 	);
 	$article->set($value);
 
-	return $app['twig']->render('create.html', array(
+	return $app['twig']->render('form.html', array(
 		'article' => $article,
+		'name' => '新規投稿'
 	));
 });
 
@@ -77,8 +78,60 @@ $app->post('/create', function (Request $request) use ($app) {
 		'created_at' => date('Y/m/d H:i:s'),
 		'updated_at' => ''
 	);
+
 	$article->set($value);
 	$article->save();
+
+	return $app->redirect('/');
+});
+
+// 編集画面
+$app->get('/edit/{id}', function ($id) use ($app) {
+	$article_model = $app['paris']->getModel('Articles');
+	$article = $article_model->find_one($id);
+
+	if ( ! $article) {
+		$app->abort(404, "お探しのページは存在しません。");
+	}
+
+	return $app['twig']->render('form.html', array(
+		'article' => $article,
+		'name' => '編集'
+	));
+});
+
+// 編集実行
+$app->post('/edit/{id}', function (Request $request, $id) use ($app) {
+	$article_model = $app['paris']->getModel('Articles');
+	$article = $article_model->find_one($id);
+
+	if ( ! $article) {
+		$app->abort(404, "お探しのページは存在しません。");
+	}
+
+	$value = array(
+		'id' => $id,
+		'title' => $request->get('title'),
+		'content' => $request->get('content'),
+		'updated_at' => date('Y/m/d H:i:s')
+	);
+
+	$article->set($value);
+	$article->save();
+
+	return $app->redirect('/');
+});
+
+// 削除実行
+$app->get('/delete/{id}', function ($id) use ($app) {
+	$article_model = $app['paris']->getModel('Articles');
+	$article = $article_model->find_one($id);
+
+	if ( ! $article) {
+		$app->abort(404, "お探しのページは存在しません。");
+	}
+
+	$article->delete();
 
 	return $app->redirect('/');
 });
